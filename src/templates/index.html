@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Engine</title>
+    <script>
+        async function performSearch() {
+            const query = document.getElementById("query").value;
+            const response = await fetch("/search", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ query: query })
+            });
+            const data = await response.json();
+
+            let resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML = "";  // Clear previous results
+
+            if (data.results && data.results.length > 0) {
+                data.results.forEach(result => {
+                    let p = document.createElement("p");
+                    p.textContent = result;
+                    resultsDiv.appendChild(p);
+                });
+            } else {
+                let noResultsMsg = document.createElement("p");
+                noResultsMsg.textContent = "No results found.";
+                resultsDiv.appendChild(noResultsMsg);
+            }
+
+        }
+    </script>
+</head>
+<body>
+    <h1>Simple Search Engine</h1>
+
+    <!-- Associated label for the input field -->
+    <label for="query">Search Query:</label>
+    <input type="text" id="query" placeholder="Enter search query">
+
+    <button onclick="performSearch()">Search</button>
+    <div id="results"></div>
+</body>
+</html>
